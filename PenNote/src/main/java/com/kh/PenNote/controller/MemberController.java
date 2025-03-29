@@ -12,7 +12,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.kh.PenNote.dao.CertDao;
 import com.kh.PenNote.dao.MemberDao;
+import com.kh.PenNote.dao.PurchaseHistoryDao;
+import com.kh.PenNote.dto.CertDto;
+import com.kh.PenNote.dto.MemberDto;
+import com.kh.PenNote.error.NoPermissionException;
 
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.Cookie;
@@ -24,10 +29,10 @@ import jakarta.servlet.http.HttpSession;
 public class MemberController {
 	@Autowired
 	private MemberDao memberDao;
-//	@Autowired
-//	private PurchaseHistoryDao purchaseHistoryDao;
-//	@Autowired
-//	private CertDao certDao;
+	@Autowired
+	private PurchaseHistoryDao purchaseHistoryDao;
+	@Autowired
+	private CertDao certDao;
 //	@Autowired
 //	private EmailService emailService;
 	
@@ -41,17 +46,17 @@ public class MemberController {
 			@ModelAttribute MemberDto memberDto, 
 			@RequestParam String certNumber) throws MessagingException, IOException {
 		//이메일과 인증번호를 이용한 이메일 진위여부 검사 추가
-		CertDto certDto = certDao.selectOne(memberDto.getMemberEmail());
-		if(certDto == null) //인증메일 발송내역이 없을 때
-			throw new NoPermissionException("비정상적인 회원가입");
-		if(certNumber.equals(certDto.getCertNumber()) == false)//번호 다름
-			throw new NoPermissionException("비정상적인 회원가입");
-		if(certDto.getCertConfirm() == null) //인증을 완료하지 않은 경우
-			throw new NoPermissionException("비정상적인 회원가입");
-		
+//		CertDto certDto = certDao.selectOne(memberDto.getMemberEmail());
+//		if(certDto == null) //인증메일 발송내역이 없을 때
+//			throw new NoPermissionException("비정상적인 회원가입");
+//		if(certNumber.equals(certDto.getCertNumber()) == false)//번호 다름
+//			throw new NoPermissionException("비정상적인 회원가입");
+//		if(certDto.getCertConfirm() == null) //인증을 완료하지 않은 경우
+//			throw new NoPermissionException("비정상적인 회원가입");
+//		
 		certDao.delete(memberDto.getMemberEmail());
 		memberDao.insert(memberDto);//회원가입
-		emailService.sendWelcomeMail(memberDto);//환영메일 발송
+//		emailService.sendWelcomeMail(memberDto);//환영메일 발송
 		return "redirect:joinFinish";
 	}
 	@RequestMapping("/joinFinish")
@@ -234,7 +239,7 @@ public class MemberController {
 			return "redirect:findPw?error";
 		}
 		
-		emailService.sendResetMail(memberDto);//재설정 메일 발송
+//		emailService.sendResetMail(memberDto);//재설정 메일 발송
 		
 		return "redirect:findPwSend";
 	}

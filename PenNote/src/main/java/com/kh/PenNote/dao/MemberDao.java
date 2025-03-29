@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import com.kh.PenNote.dto.MemberDto;
 import com.kh.PenNote.mapper.MemberMapper;
+import com.kh.PenNote.vo.PageVO;
 
 
 @Repository
